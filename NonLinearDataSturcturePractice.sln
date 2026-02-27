@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35931.197 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NonLinearDataSturcturePractice", "NonLinearDataSturcturePractice\NonLinearDataSturcturePractice.vcxproj", "{CBB088A1-F2CD-42A2-9257-95C09645A4F7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CBB088A1-F2CD-42A2-9257-95C09645A4F7}.Debug|x64.ActiveCfg = Debug|x64
+		{CBB088A1-F2CD-42A2-9257-95C09645A4F7}.Debug|x64.Build.0 = Debug|x64
+		{CBB088A1-F2CD-42A2-9257-95C09645A4F7}.Release|x64.ActiveCfg = Release|x64
+		{CBB088A1-F2CD-42A2-9257-95C09645A4F7}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {62C194F7-29FE-4183-B2FC-25B5850E3DC0}
+	EndGlobalSection
+EndGlobal
