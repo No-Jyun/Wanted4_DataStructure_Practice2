@@ -8,6 +8,10 @@ public:
 	BST();
 	~BST();
 
+	void ReadPlayerData(std::string filename);
+
+	void StartBST();
+
 	bool Insert(const std::string& name, const int score);
 
 	bool Delete(const std::string& name);

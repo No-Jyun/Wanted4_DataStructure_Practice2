@@ -1,6 +1,8 @@
 #include "BST.h"
 
 #include <iostream>
+#include <fstream>
+#include <Windows.h>
 
 BST::BST()
 {
@@ -11,6 +13,143 @@ BST::~BST()
 	// 전체 순회하며 모든 노드 삭제
 	DeleteRecursive(root);
 	root = nullptr;
+}
+
+void BST::ReadPlayerData(std::string filename)
+{
+	std::cout << "저장된 플레이어 정보를 불러옵니다..\n";
+
+	// 파일 로드
+	std::string path = "../Resources/" + filename;
+	std::ifstream file(path);
+
+	// 예외 처리
+	if (!file.is_open())
+	{
+		std::cout << "파일 로드 오류..\n";
+		__debugbreak();
+	}
+
+	std::string line;
+
+	// 첫 줄은 아무 처리도 하지 않고 넘어감
+	getline(file, line);
+
+	// 한 줄씩 읽기
+	while (getline(file, line))
+	{
+		// 개행 문자 처리
+		size_t rPos = line.find('\r');
+		if (rPos != std::string::npos)
+		{
+			line.erase(rPos);
+		}
+
+		// 빈 줄이면 스킵
+		if (line.empty())
+		{
+			continue;
+		}
+
+		// CSV 파싱 (쉼표 기준 분리)
+		std::vector<std::string> row;
+		size_t start = 0;
+		size_t end = 0;
+
+		// start 인덱스부터 ',' 찾기
+		while ((end = line.find(',', start)) != std::string::npos)
+		{
+			row.emplace_back(line.substr(start, end - start));
+			start = end + 1;
+		}
+
+		// 마지막 데이터 추가
+		row.emplace_back(line.substr(start));
+
+		// BST에 삽입
+		Insert(row[0], stoi(row[1]));
+	}
+
+	// 파일 닫기
+	file.close();
+
+	std::cout << "플레이어 정보를 전부 저장했습니다.\n";
+
+	DWORD delay = static_cast<DWORD>(1.0f * 1000);
+	Sleep(delay);
+}
+
+void BST::StartBST()
+{
+	ReadPlayerData("PlayerData.csv");
+	system("cls");
+
+	std::string order = "";
+
+	while (1)
+	{
+		std::cout << "수행할 명령을 입력하세요\n";
+		std::cout << "insert name score : 플레이어 정보를 저장합니다. \n"
+			<< "delete name : 플레이어 정보를 삭제합니다. \n"
+			<< "find name : 플레이어 정보를 검색합니다. \n"
+			<< "top n : 상위 n명의 플레이어 정보를 출력합니다. \n"
+			<< "quit : 프로그램을 종료합니다\n";
+
+		std::cout << "명령 : ";
+		std::cin >> order;
+
+		std::string name;
+		if (order == "insert")
+		{
+			int score;
+			std::cin >> name >> score;
+
+			std::cout << "------------------------------\n";
+			Insert(name, score);
+		}
+		else if (order == "delete")
+		{
+			std::cin >> name;
+
+			std::cout << "------------------------------\n";
+			Delete(name);
+		}
+		else if (order == "find")
+		{
+			std::cin >> name;
+
+			std::cout << "------------------------------\n";
+			Find(name);
+		}
+		else if (order == "top")
+		{
+			int n;
+			std::cin >> n;
+
+			std::cout << "------------------------------\n";
+			Top(n);
+		}
+		else if (order == "quit")
+		{
+			system("cls");
+
+			std::cout << "\n프로그램을 종료합니다..\n";
+			DWORD delay = static_cast<DWORD>(1.0f * 1000);
+			Sleep(delay);
+			break;
+		}
+		else
+		{
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED);
+			std::cout << "\n!!!!!!!!! Invalid Order : " << order << "!!!!!!!!!\n";
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 
+				FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+		}
+
+		DWORD delay = static_cast<DWORD>(1.0f * 1000);
+		Sleep(delay);
+		std::cout << "\n";
+	}
 }
 
 bool BST::Insert(const std::string& name, const int score)
@@ -114,6 +253,12 @@ bool BST::Find(const std::string& findName)
 void BST::Top(const int printNum)
 {
 	// 예외 처리
+	if (bstSize == 0)
+	{
+		std::cout << "현재 BST가 비었습니다!\n"
+			<< "먼저 insert 해주세요!\n";
+		return;
+	}
 	if (0 >= printNum || printNum > bstSize)
 	{
 		std::cout << "현재 BST에 저장된 플레이어 수는 " << bstSize << "명 입니다!\n"
