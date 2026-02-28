@@ -20,8 +20,17 @@ private:
 	// Find 함수에서 사용하는 전위순회 탐색 함수
 	bool FindRecursive(Node* node, const std::string& findName, Node*& outNode);
 
-	// Delete 함수에서 사용하는 후위순회 삭제 함수
-	bool DeleteRecursive(Node* node);
+	// 소멸자에서 사용하는 후위순회 삭제 함수
+	bool DeleteRecursive(Node*& node);
+
+	// Delete 함수에서 사용하는 현재 노드의 삭제 함수
+	bool DeleteCurrentNode(Node* node);
+
+	// 현재 노드의 하위 트리에서 최대값을 갖는 노드를 찾는 함수
+	Node* FindMaxValInNode(Node* node);
+
+	// 현재 노드의 하위 트리에서 최소값을 갖는 노드를 찾는 함수
+	Node* FindMinValInNode(Node* node);
 
 private:
 	Node* root = nullptr;

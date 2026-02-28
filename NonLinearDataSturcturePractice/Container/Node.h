@@ -8,8 +8,8 @@ class Node
 	friend class BST;
 
 public:
-	Node(const std::string& playerName = "", const int score = 0)
-		: score(score)
+	Node(const std::string& playerName = "", const int score = 0, Node* const parent = nullptr)
+		: score(score), parent(parent)
 	{
 		playerNames.emplace_back(playerName);
 	}
@@ -40,6 +40,7 @@ public:
 		return score >= other.score;
 	}
 
+private:
 	void AddSameScorePlayer(const std::string& playerName)
 	{
 		playerNames.emplace_back(playerName);
@@ -71,6 +72,11 @@ public:
 		return false;
 	}
 
+	bool IsEmpty()
+	{
+		return playerNames.empty();
+	}
+
 private:
 	// Todo: 노드의 키 구조 고민 필요
 	std::vector<std::string> playerNames;
@@ -78,4 +84,5 @@ private:
 
 	Node* leftChild = nullptr;
 	Node* rightChild = nullptr;
+	Node* parent = nullptr;
 };
