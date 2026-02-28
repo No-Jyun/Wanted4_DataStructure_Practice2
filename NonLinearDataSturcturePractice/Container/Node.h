@@ -78,7 +78,6 @@ private:
 	}
 
 private:
-	// Todo: 노드의 키 구조 고민 필요
 	std::vector<std::string> playerNames;
 	int score = 0;
 
