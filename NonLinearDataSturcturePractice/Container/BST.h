@@ -12,7 +12,7 @@ public:
 
 	bool Delete(const std::string& name);
 
-	bool Find(const std::string& findName, Node*& outNode);
+	bool Find(const std::string& findName);
 
 	void Top(const int printNum);
 
@@ -32,8 +32,11 @@ private:
 	// 현재 노드의 하위 트리에서 최소값을 갖는 노드를 찾는 함수
 	Node* FindMinValInNode(Node* node);
 
+	std::vector<std::pair<std::string, int>> TopRecursive(Node* node, const int nowNum);
+
 private:
 	Node* root = nullptr;
 
+	int bstSize = 0;
 };
 

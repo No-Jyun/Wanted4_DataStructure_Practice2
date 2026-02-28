@@ -19,6 +19,7 @@ bool BST::Insert(const std::string& name, const int score)
 	if (!root)
 	{
 		root = new Node(name, score);
+		bstSize++;
 		return true;
 	}
 
@@ -30,6 +31,7 @@ bool BST::Insert(const std::string& name, const int score)
 		return false;
 	}
 
+	bstSize++;
 	currentNode = root;
 	Node* exNode = currentNode;
 	while (currentNode)
@@ -81,6 +83,7 @@ bool BST::Delete(const std::string& name)
 
 	// 현재 점수 노드에서 해당 이름을 가진 플레이어 제거
 	outNode->DeletePlayer(name);
+	bstSize--;
 	std::cout << "플레이어 " << name << " 을 삭제했습니다!\n";
 
 	// 현재 점수 노드에 플레이어 존재하면 처리 종료
@@ -93,8 +96,9 @@ bool BST::Delete(const std::string& name)
 	return DeleteCurrentNode(outNode);
 }
 
-bool BST::Find(const std::string& findName, Node*& outNode)
+bool BST::Find(const std::string& findName)
 {
+	Node* outNode = nullptr;
 	if (FindRecursive(root, findName, outNode))
 	{
 		std::cout << "플레이어 이름 : " << findName << ", 플레이어 점수 : " << outNode->score << "\n";
@@ -109,7 +113,22 @@ bool BST::Find(const std::string& findName, Node*& outNode)
 
 void BST::Top(const int printNum)
 {
-	// Todo: 구현 필요
+	// 예외 처리
+	if (0 >= printNum || printNum > bstSize)
+	{
+		std::cout << "현재 BST에 저장된 플레이어 수는 " << bstSize << "명 입니다!\n"
+			<< "0 보다 크고 " << bstSize << " 보다 같거나 작은 수를 입력해주세요!\n";
+		return;
+	}
+
+	std::cout << "점수가 높은 순으로 " << printNum << "명을 출력합니다!\n";
+
+	std::vector<std::pair<std::string, int>> printVector = TopRecursive(root, printNum);
+
+	for (std::pair<std::string, int> data : printVector)
+	{
+		std::cout << "플레이어 이름 : " << data.first << ", 플레이어 점수 : " << data.second << "\n";
+	}
 }
 
 bool BST::FindRecursive(Node* node, const std::string& findName, Node*& outNode)
@@ -239,4 +258,41 @@ Node* BST::FindMinValInNode(Node* node)
 	}
 
 	return currentNode;
+}
+
+std::vector<std::pair<std::string, int>> BST::TopRecursive(Node* node, const int nowNum)
+{
+	if (!node || nowNum == 0)
+	{
+		return {};
+	}
+	
+	// 오른쪽 자식 트리에서 n명 저장
+	std::vector<std::pair<std::string, int>> rightPlayer = TopRecursive(node->rightChild, nowNum);
+
+	// 오른쪽 자식 트리에서 저장된 n명을 제외하고 남은 저장해야할 플레이어 수
+	int restPlayerNum = nowNum - static_cast<int>(rightPlayer.size());
+
+	// 현재 노드에서 플레이어 저장
+	for (int i = 0;i < static_cast<int>(node->playerNames.size());i++)
+	{
+		if (restPlayerNum == 0)
+		{
+			break;
+		}
+		
+		restPlayerNum--;
+		rightPlayer.emplace_back(std::make_pair(node->playerNames[i], node->score));
+	}
+
+	// 왼쪽 자식 트리에서 남은 플레이어 저장
+	std::vector<std::pair<std::string, int>> leftPlayer = TopRecursive(node->leftChild, restPlayerNum);
+
+	// 저장한 플레이어 합치기
+	for (std::pair<std::string, int> data : leftPlayer)
+	{
+		rightPlayer.emplace_back(data);
+	}
+
+	return rightPlayer;
 }
